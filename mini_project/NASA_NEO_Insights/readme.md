@@ -6,12 +6,16 @@ This project tracks and analyzes NASA Near-Earth Objects (NEOs) using the offici
 
 ## 📦 Project Structure
 
-mini_project/ └── 🚀 NASA Near-Earth Object (NEO) Tracking & Insights using Public API/   
-&nbsp;&nbsp;&nbsp;&nbsp;                   ├── nasa_asteroids.db # SQLite database with asteroid and approach data   
-&nbsp;&nbsp;&nbsp;&nbsp;                   ├── nasa_streamlit.py # Main Streamlit dashboard   
-&nbsp;&nbsp;&nbsp;&nbsp;                   ├── nasa.json # Raw data from NASA API    
-&nbsp;&nbsp;&nbsp;&nbsp;                   ├── readme.md # Project-specific README    
-&nbsp;&nbsp;&nbsp;&nbsp;                   ├── sqlite3.py # Script to populate SQLite DB from JSON  
+mini_project/
+└── NASA_NEO_Insights/
+    ├── api_requests.py        # Fetches NEO data from NASA API and saves as nasa.json
+    ├── data_cleance.py        # Cleans nasa.json and exports as neo_cleaned.json
+    ├── nasa_asteroids.db      # SQLite database with asteroid and approach data
+    ├── nasa_streamlit.py      # Main Streamlit dashboard
+    ├── nasa.json              # Raw data from NASA API
+    ├── neo_cleaned.json       # Cleaned data in JSON format
+    ├── readme.md              # Project-specific README
+    └── __pycache__/           # Python cache files
 
 ---
 
@@ -40,13 +44,19 @@ mini_project/ └── 🚀 NASA Near-Earth Object (NEO) Tracking & Insights us
 ## 🚦 How It Works
 
 1. **Data Extraction**  
-   Run `requests.py` to fetch and save NEO data from NASA API to `neo_cleaned.csv`.
+   Run `api_requests.py` to fetch and save NEO data from NASA API to `nasa.json`.
 
-2. **Database Population**  
-   Run `sqlite3.py` to create and populate `nasa_asteroids.db` from the CSV.
+2. **Data Cleaning**  
+   Run `data_cleance.py` to clean `nasa.json` and export the results to `neo_cleaned.json`.
 
-3. **Dashboard**  
+3. **Database Population**  
+   Run your database script (e.g., `sqlite3.py` or similar) to create and populate `nasa_asteroids.db` from the cleaned JSON.
+
+4. **Dashboard**  
    Run `nasa_streamlit.py` with Streamlit to launch the interactive dashboard:
    ```sh
-   streamlit run st.py
+   streamlit run nasa_streamlit.py
+   ```
+
+---
 
