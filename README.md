@@ -5,7 +5,7 @@ This repo contains assignments, mini-projects, notebooks, and other fun experime
 
 📚 Contents  
 📁 Mini-Projects/  
-    📄 🚀 NASA Near-Earth Object (NEO) Tracking & Insights using Public API  
+&nbsp; 📄 🚀 NASA Near-Earth Object (NEO) Tracking & Insights using Public API    
 📄 README.md  
   
   
