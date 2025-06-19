@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import time
 import json
 
-API_KEY = 'HnfGx2LkyOqlZykr83ZhNH2CcL7jH2qPk7bQ80xW'  # Replace with your NASA API key
+API_KEY = 'HnfGx2LkyOqlZykr83ZhNH2CcL7jH2qPk7bQ80xW' #API key for NASA NEO API
 BASE_URL = 'https://api.nasa.gov/neo/rest/v1/feed'
 start_date = datetime(2024, 1, 1)
 records = []
@@ -50,9 +50,8 @@ while len(records) < max_records:
                 continue
         if len(records) >= max_records:
             break
-    # Pagination: move to next 7 days
     start_date = end_date + timedelta(days=1)
-    time.sleep(1)  # Be polite to the API
+    time.sleep(1)
 
 import pandas as pd
 df = pd.DataFrame(records)

@@ -5,7 +5,7 @@ from datetime import date
 
 conn = sqlite3.connect('NASA_NEO_Insights/db/nasa_asteroids.db')
 
-# --- Responsive Custom CSS ---
+# --- CSS ---
 st.markdown(
     """
     <style>
@@ -79,7 +79,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# --- Sidebar Navigation ---
+# --- Sidebar  ---
 st.sidebar.markdown('<div class="sidebar-section sidebar-title">Asteroid Approaches</div>', unsafe_allow_html=True)
 st.sidebar.button('Filter Criteria', key='filter', help='Filter asteroids', use_container_width=True)
 st.sidebar.markdown('<div class="sidebar-section">Queries</div>', unsafe_allow_html=True)
@@ -88,7 +88,6 @@ st.sidebar.markdown('<div class="sidebar-section">Queries</div>', unsafe_allow_h
 st.markdown('<div class="main-header">🚀 NASA Asteroid Tracker <span class="header-icon">🪐</span></div>', unsafe_allow_html=True)
 
 # --- Filters in Main Area ---
-# --- Add Flexbox CSS for Filters ---
 st.markdown(
     """
     <style>
@@ -169,15 +168,14 @@ with st.container():
     with col8:
         st.markdown('<span class="filter-label">End Date</span>', unsafe_allow_html=True)
         end_date = st.date_input("End Date", value=pd.to_datetime("2025-08-17"), key='end_date')
-    # col9 left empty for 3x3 grid
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-st.write("")  # Extra vertical space
+st.write("")  
 
 # --- Filter Button and Table Display ---
 if 'filtered_df' not in st.session_state:
-    # On first load, show all data (or a default filter)
+    # default filter
     filter_query = '''
     SELECT a.name, c.close_approach_date, c.relative_velocity_kmph, 
            a.estimated_diameter_min_km, a.estimated_diameter_max_km, 
@@ -214,9 +212,9 @@ if st.session_state.filtered_df.empty:
 else:
     st.dataframe(st.session_state.filtered_df, use_container_width=True)
 
-st.divider()  # Horizontal line for separation
+st.divider()
 
-# --- Query Section (below filters) ---
+# --- Query Section ---
 st.markdown("### Quick Queries")
 query_options = {
     "Asteroid Approach Count": '''

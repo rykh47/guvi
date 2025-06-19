@@ -1,11 +1,11 @@
 import sqlite3
 import pandas as pd
 import json
+
 with open('NASA_NEO_Insights/db/neo_cleaned.json', 'r') as f:
     records = json.load(f)
 
 df = pd.DataFrame(records)
-
 df.to_json('NASA_NEO_Insights/db/neo_cleaned.json', orient='records', indent=4)
 
 conn = sqlite3.connect('db/nasa_asteroids.db')
@@ -34,12 +34,10 @@ CREATE TABLE IF NOT EXISTS close_approach (
 )
 ''')
 
-# Insert unique asteroids
 asteroids = df[['id', 'name', 'absolute_magnitude_h', 'estimated_diameter_min_km',
                 'estimated_diameter_max_km', 'is_potentially_hazardous_asteroid']].drop_duplicates()
 asteroids.to_sql('asteroids', conn, if_exists='append', index=False)
 
-# Insert close approach data
 close_approach = df[['neo_reference_id', 'close_approach_date', 'relative_velocity_kmph',
                      'astronomical', 'miss_distance_km', 'miss_distance_lunar', 'orbiting_body']]
 close_approach.to_sql('close_approach', conn, if_exists='append', index=False)
