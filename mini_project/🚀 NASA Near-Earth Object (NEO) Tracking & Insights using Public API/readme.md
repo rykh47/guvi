@@ -6,12 +6,12 @@ This project tracks and analyzes NASA Near-Earth Objects (NEOs) using the offici
 
 ## 📦 Project Structure
 
-mini_project/ └── 🚀 NASA Near-Earth Object (NEO) Tracking & Insights using Public API/ 
-                    ├── nasa_asteroids.db # SQLite database with asteroid and approach data 
-                    ├── nasa_streamlit.py # Main Streamlit dashboard 
-                    ├── nasa.json # Raw data from NASA API  
-                    ├── readme.md # Project-specific README  
-                    ├── sqlite3.py # Script to populate SQLite DB from JSON
+mini_project/ └── 🚀 NASA Near-Earth Object (NEO) Tracking & Insights using Public API/   
+&nbsp;&nbsp;&nbsp;&nbsp;                   ├── nasa_asteroids.db # SQLite database with asteroid and approach data   
+&nbsp;&nbsp;&nbsp;&nbsp;                   ├── nasa_streamlit.py # Main Streamlit dashboard   
+&nbsp;&nbsp;&nbsp;&nbsp;                   ├── nasa.json # Raw data from NASA API    
+&nbsp;&nbsp;&nbsp;&nbsp;                   ├── readme.md # Project-specific README    
+&nbsp;&nbsp;&nbsp;&nbsp;                   ├── sqlite3.py # Script to populate SQLite DB from JSON  
 
 ---
 
