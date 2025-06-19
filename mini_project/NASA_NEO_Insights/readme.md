@@ -33,7 +33,7 @@ This project tracks and analyzes NASA Near-Earth Objects (NEOs) using the offici
 ## 📊 Features
 
 - Fetches NEO data from NASA’s public API
-- Cleans and stores data in CSV and SQLite database
+- Cleans and stores data in JSON and SQLite database
 - Interactive Streamlit dashboard:
   - Filter asteroids by magnitude, diameter, velocity, distance, date, and hazard status
   - Predefined queries (e.g., top approaches, fastest asteroids, hazardous asteroids)
