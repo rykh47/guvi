@@ -1,14 +1,14 @@
 import sqlite3
 import pandas as pd
 import json
-with open('NASA_NEO_Insights/neo_cleaned.json', 'r') as f:
+with open('NASA_NEO_Insights/db/neo_cleaned.json', 'r') as f:
     records = json.load(f)
 
 df = pd.DataFrame(records)
 
-df.to_json('NASA_NEO_Insights/neo_cleaned.json', orient='records', indent=4)
+df.to_json('NASA_NEO_Insights/db/neo_cleaned.json', orient='records', indent=4)
 
-conn = sqlite3.connect('nasa_asteroids.db')
+conn = sqlite3.connect('db/nasa_asteroids.db')
 cur = conn.cursor()
 
 cur.execute('''

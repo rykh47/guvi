@@ -3,9 +3,9 @@ import sqlite3
 import pandas as pd
 from datetime import date
 
-conn = sqlite3.connect('nasa_asteroids.db')
+conn = sqlite3.connect('NASA_NEO_Insights/db/nasa_asteroids.db')
 
-# --- Custom CSS for styling ---
+# --- Responsive Custom CSS ---
 st.markdown(
     """
     <style>
@@ -13,7 +13,8 @@ st.markdown(
         text-align: center;
         font-size: 2.5rem;
         font-weight: bold;
-        margin-bottom: 1rem;
+        margin-bottom: 2rem;
+        margin-top: 1rem;
     }
     .header-icon {
         font-size: 2rem;
@@ -29,14 +30,21 @@ st.markdown(
     }
     .filter-card {
         background: #f8f9fa;
-        padding: 1.5rem;
-        border-radius: 10px;
+        padding: 2rem 1.5rem 2rem 1.5rem;
+        border-radius: 12px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        margin-bottom: 2rem;
+        margin-bottom: 2.5rem;
+        margin-top: 1rem;
+        max-width: 100%;
     }
     .filter-label {
-        font-size: 0.95rem;
+        font-size: 1rem;
         color: #666;
+        margin-bottom: 0.3rem;
+        display: block;
+    }
+    .stNumberInput, .stSlider, .stDateInput, .stSelectbox {
+        margin-bottom: 1.2rem !important;
     }
     .highlight-btn {
         background-color: #ff4b4b !important;
@@ -44,6 +52,27 @@ st.markdown(
         border-radius: 5px;
         font-weight: bold;
         margin-bottom: 1rem;
+    }
+    @media (max-width: 900px) {
+        .main-header {
+            font-size: 2rem;
+        }
+        .filter-card {
+            padding: 1rem 0.5rem 1rem 0.5rem;
+        }
+    }
+    @media (max-width: 700px) {
+        .main-header {
+            font-size: 1.3rem;
+        }
+        .filter-card {
+            padding: 0.5rem 0.2rem 0.5rem 0.2rem;
+        }
+        .stApp [data-testid="column"] {
+            flex: 1 1 100% !important;
+            min-width: 100% !important;
+            max-width: 100% !important;
+        }
     }
     </style>
     """,
@@ -59,64 +88,136 @@ st.sidebar.markdown('<div class="sidebar-section">Queries</div>', unsafe_allow_h
 st.markdown('<div class="main-header">🚀 NASA Asteroid Tracker <span class="header-icon">🪐</span></div>', unsafe_allow_html=True)
 
 # --- Filters in Main Area ---
-st.markdown('<div class="filter-card">', unsafe_allow_html=True)
-col1, col2, col3, col4 = st.columns(4)
+# --- Add Flexbox CSS for Filters ---
+st.markdown(
+    """
+    <style>
+    .filter-flex {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+    .filter-item {
+        min-width: 220px;
+        flex: 1 1 220px;
+        margin-bottom: 1.2rem;
+    }
+    @media (max-width: 900px) {
+        .filter-flex {
+            gap: 1rem;
+        }
+        .filter-item {
+            min-width: 160px;
+        }
+    }
+    @media (max-width: 700px) {
+        .filter-flex {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .filter-item {
+            min-width: 100%;
+        }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
-with col1:
-    st.markdown('<span class="filter-label">Min Magnitude</span>', unsafe_allow_html=True)
-    min_mag = st.number_input("", min_value=10.0, max_value=32.41, value=12.0, step=0.01, key='min_mag')
-    st.markdown('<span class="filter-label">Min Estimated Distance (km)</span>', unsafe_allow_html=True)
-    min_dist = st.number_input(" ", min_value=0.0, max_value=4.43, value=0.0, step=0.01, key='min_dist')
-    st.markdown('<span class="filter-label">Min Estimated Diameter (km)</span>', unsafe_allow_html=True)
-    min_diam = st.number_input("  ", min_value=0.0, max_value=19.33, value=0.0, step=0.01, key='min_diam')
+with st.container():
+    # First row
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown('<span class="filter-label">Estimated Diameter Min (km)</span>', unsafe_allow_html=True)
+        diam_min_range = st.slider(
+            "Diameter Min (km)", 0.0, 5.0, (0.0, 5.0), step=0.001, key='diam_min_range'
+        )
+    with col2:
+        st.markdown('<span class="filter-label">Estimated Diameter Max (km)</span>', unsafe_allow_html=True)
+        diam_max_range = st.slider(
+            "Diameter Max (km)", 0.0, 11.0, (0.0, 11.0), step=0.001, key='diam_max_range'
+        )
+    with col3:
+        st.markdown('<span class="filter-label">Relative velocity (kmph)</span>', unsafe_allow_html=True)
+        rel_vel = st.slider(
+            "Relative velocity (kmph)", 1418, 190514, (1418, 190514), step=1, key='rel_vel'
+        )
 
-with col2:
-    st.markdown('<span class="filter-label">Max Magnitude</span>', unsafe_allow_html=True)
-    max_mag = st.number_input("   ", min_value=10.0, max_value=32.41, value=32.41, step=0.01, key='max_mag')
-    st.markdown('<span class="filter-label">Max Estimated Distance (km)</span>', unsafe_allow_html=True)
-    max_dist = st.number_input("    ", min_value=0.0, max_value=4.43, value=4.43, step=0.01, key='max_dist')
-    st.markdown('<span class="filter-label">Max Estimated Diameter (km)</span>', unsafe_allow_html=True)
-    max_diam = st.number_input("     ", min_value=0.0, max_value=19.33, value=19.33, step=0.01, key='max_diam')
+    # Second row
+    col4, col5, col6 = st.columns(3)
+    with col4:
+        st.markdown('<span class="filter-label">Astronomical Units</span>', unsafe_allow_html=True)
+        au_range = st.slider(
+            "AU", 0.0, 0.5, (0.0, 0.5), step=0.001, key='au_range'
+        )
+    with col5:
+        st.markdown('<span class="filter-label">Lunar Distance</span>', unsafe_allow_html=True)
+        lunar_range = st.slider(
+            "Lunar Distance", 0.02, 194.48, (0.02, 194.48), step=0.01, key='lunar_range'
+        )
+    with col6:
+        st.markdown('<span class="filter-label">Potentially Hazardous</span>', unsafe_allow_html=True)
+        hazardous = st.selectbox("Potentially Hazardous", ["All", "Yes", "No"], key='hazardous')
 
-with col3:
-    st.markdown('<span class="filter-label">Relative_velocity_kmph Range</span>', unsafe_allow_html=True)
-    rel_vel = st.slider(" ", 1441.21, 173071.85, (1441.21, 173071.85), key='rel_vel')
-    st.markdown('<span class="filter-label">Astronomical Unit</span>', unsafe_allow_html=True)
-    au = st.slider("  ", 0.0, 9.59, (0.0, 9.59), key='au')
-    st.markdown('<span class="filter-label">Only Show Potentially Hazardous</span>', unsafe_allow_html=True)
-    hazardous = st.selectbox("   ", ["All", "Yes", "No"], key='hazardous')
+    # Third row
+    col7, col8, col9 = st.columns(3)
+    with col7:
+        st.markdown('<span class="filter-label">Start Date</span>', unsafe_allow_html=True)
+        start_date = st.date_input("Start Date", value=pd.to_datetime("2024-01-01"), key='start_date')
+    with col8:
+        st.markdown('<span class="filter-label">End Date</span>', unsafe_allow_html=True)
+        end_date = st.date_input("End Date", value=pd.to_datetime("2025-08-17"), key='end_date')
+    # col9 left empty for 3x3 grid
 
-with col4:
-    st.markdown('<span class="filter-label">Start Date</span>', unsafe_allow_html=True)
-    start_date = st.date_input("    ", value=date(2014, 1, 1), key='start_date')
-    st.markdown('<span class="filter-label">End Date</span>', unsafe_allow_html=True)
-    end_date = st.date_input("     ", value=date(2015, 4, 13), key='end_date')
+    st.markdown('</div>', unsafe_allow_html=True)
 
-st.markdown('</div>', unsafe_allow_html=True)
+st.write("")  # Extra vertical space
 
-# --- Filter Button ---
+# --- Filter Button and Table Display ---
+if 'filtered_df' not in st.session_state:
+    # On first load, show all data (or a default filter)
+    filter_query = '''
+    SELECT a.name, c.close_approach_date, c.relative_velocity_kmph, 
+           a.estimated_diameter_min_km, a.estimated_diameter_max_km, 
+           a.is_potentially_hazardous_asteroid
+    FROM asteroids a
+    JOIN close_approach c ON a.id = c.neo_reference_id
+    '''
+    st.session_state.filtered_df = pd.read_sql_query(filter_query, conn)
+
 if st.button('Filter', key='filter_btn'):
     filter_query = f'''
-    SELECT a.name, c.close_approach_date, c.relative_velocity_kmph, a.estimated_diameter_min_km, a.is_potentially_hazardous_asteroid
+    SELECT a.name, c.close_approach_date, c.relative_velocity_kmph, 
+           a.estimated_diameter_min_km, a.estimated_diameter_max_km, 
+           a.is_potentially_hazardous_asteroid
     FROM asteroids a
     JOIN close_approach c ON a.id = c.neo_reference_id
     WHERE 1=1
-    AND a.absolute_magnitude_h BETWEEN {min_mag} AND {max_mag}
+    AND a.estimated_diameter_min_km BETWEEN {diam_min_range[0]} AND {diam_min_range[1]}
+    AND a.estimated_diameter_max_km BETWEEN {diam_max_range[0]} AND {diam_max_range[1]}
     AND c.relative_velocity_kmph BETWEEN {rel_vel[0]} AND {rel_vel[1]}
-    AND a.estimated_diameter_min_km BETWEEN {min_diam} AND {max_diam}
-    AND c.miss_distance_kilometers BETWEEN {min_dist} AND {max_dist}
+    AND c.astronomical BETWEEN {au_range[0]} AND {au_range[1]}
+    AND c.miss_distance_lunar BETWEEN {lunar_range[0]} AND {lunar_range[1]}
     AND c.close_approach_date BETWEEN '{start_date}' AND '{end_date}'
     '''
     if hazardous == "Yes":
         filter_query += " AND a.is_potentially_hazardous_asteroid = 1"
     elif hazardous == "No":
         filter_query += " AND a.is_potentially_hazardous_asteroid = 0"
-    filtered_df = pd.read_sql_query(filter_query, conn)
-    st.header("Filtered Asteroids")
-    st.dataframe(filtered_df)
+    st.session_state.filtered_df = pd.read_sql_query(filter_query, conn)
+
+st.header("Filtered Asteroids")
+if st.session_state.filtered_df.empty:
+    st.info("No results found for the selected filters.")
+else:
+    st.dataframe(st.session_state.filtered_df, use_container_width=True)
+
+st.divider()  # Horizontal line for separation
 
 # --- Query Section (below filters) ---
-st.markdown('---')
+st.markdown("### Quick Queries")
 query_options = {
     "Asteroid Approach Count": '''
         SELECT a.name, COUNT(*) as approach_count
@@ -146,6 +247,18 @@ query_options = {
 }
 selected_query = st.selectbox("Select a Query", list(query_options.keys()))
 df = pd.read_sql_query(query_options[selected_query], conn)
-st.dataframe(df)
+st.dataframe(df, use_container_width=True)
+
+# --- Debugging Data Stats ---
+if st.checkbox("Show data stats for debugging"):
+    st.write("Asteroids sample:", pd.read_sql_query("SELECT * FROM asteroids LIMIT 5", conn))
+    st.write("Close approach sample:", pd.read_sql_query("SELECT * FROM close_approach LIMIT 5", conn))
+    st.write(pd.read_sql_query("SELECT MIN(estimated_diameter_min_km), MAX(estimated_diameter_min_km) FROM asteroids", conn))
+    st.write(pd.read_sql_query("SELECT MIN(estimated_diameter_max_km), MAX(estimated_diameter_max_km) FROM asteroids", conn))
+    st.write(pd.read_sql_query("SELECT MIN(relative_velocity_kmph), MAX(relative_velocity_kmph) FROM close_approach", conn))
+    st.write(pd.read_sql_query("SELECT MIN(astronomical), MAX(astronomical) FROM close_approach", conn))
+    st.write(pd.read_sql_query("SELECT MIN(miss_distance_lunar), MAX(miss_distance_lunar) FROM close_approach", conn))
+    st.write(pd.read_sql_query("SELECT MIN(close_approach_date), MAX(close_approach_date) FROM close_approach", conn))
+    st.write(pd.read_sql_query("SELECT a.id, c.neo_reference_id FROM asteroids a JOIN close_approach c ON a.id = c.neo_reference_id LIMIT 5", conn))
 
 conn.close()

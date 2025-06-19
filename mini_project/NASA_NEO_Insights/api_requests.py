@@ -56,5 +56,5 @@ while len(records) < max_records:
 
 import pandas as pd
 df = pd.DataFrame(records)
-df.to_json('NASA_NEO_Insights/neo_cleaned.json', orient='records', indent=4)
+df.to_json('NASA_NEO_Insights/db/neo_cleaned.json', orient='records', indent=4)
 print(f"Extracted {len(df)} records.")
