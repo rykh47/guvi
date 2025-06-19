@@ -1,7 +1,10 @@
 import sqlite3
 import pandas as pd
+import json
+with open('nasa.json', 'r') as f:
+    records = json.load(f)
 
-df = pd.read_csv('neo_cleaned.csv')
+df = pd.DataFrame(records)
 
 conn = sqlite3.connect('nasa_asteroids.db')
 cur = conn.cursor()
@@ -41,4 +44,4 @@ close_approach.to_sql('close_approach', conn, if_exists='append', index=False)
 
 conn.commit()
 conn.close()
-print("Database populated.")
+print("Database populated from JSON.")
