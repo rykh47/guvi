@@ -13,10 +13,8 @@ This project tracks and analyzes NASA Near-Earth Objects (NEOs) using the offici
  ```         ├── neo_cleaned.json       # Cleaned data in JSON format  ```   
  ```         ├── nasa_asteroids.db      # SQLite database with asteroid and approach data  ```  
  ```   ├── api_requests.py        # Fetches NEO data from NASA API and saves as nasa.json  ```    
- ```   ├── data_cleance.py        # Cleans nasa.json and exports as neo_cleaned.json  ```  
- ```   ├── nasa_asteroids.db      # SQLite database with asteroid and approach data  ```  
+ ```   ├── data_cleance.py        # Cleans nasa.json and exports as neo_cleaned.json  ```   
  ```   ├── nasa_streamlit.py      # Main Streamlit dashboard  ```  
- 
  ```   ├── readme.md              # Project-specific README  ```  
  ```   └── __pycache__/           # Python cache files  ```  
 
