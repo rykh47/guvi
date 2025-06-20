@@ -1,6 +1,6 @@
 # 🚀 NASA Near-Earth Object (NEO) Tracking & Insights using Public API
 
-This project tracks and analyzes NASA Near-Earth Objects (NEOs) using the official NASA public API. It provides a Streamlit dashboard for interactive filtering, querying, and visualization of asteroid approach data.
+This project tracks and analyzes NASA Near-Earth Objects (NEOs) using the official NASA public API. It provides a **Streamlit dashboard** for interactive filtering, querying, and visualization of asteroid approach data.
 
 ---
 
@@ -31,33 +31,92 @@ This project tracks and analyzes NASA Near-Earth Objects (NEOs) using the offici
 
 ---
 
-## 📊 Features
+## 📊 Streamlit Application Features
 
-- Fetches NEO data from NASA’s public API
-- Cleans and stores data in JSON and SQLite database
-- Interactive Streamlit dashboard:
-  - Filter asteroids by magnitude, diameter, velocity, distance, date, and hazard status
-  - Predefined queries (e.g., top approaches, fastest asteroids, hazardous asteroids)
-  - Data visualization in tabular format
+### 1. **Asteroid Approaches (Filter Criteria)**
+- **Filter asteroids** by:
+  - Estimated diameter (min/max)
+  - Relative velocity
+  - Astronomical units (AU)
+  - Lunar distance (LD)
+  - Potentially hazardous status
+  - Date range
+- **View filtered results** in a sortable, searchable table.
+
+### 2. **Asteroid Queries**
+- Choose from a rich set of **predefined SQL queries** to answer questions such as:
+  - How many times each asteroid has approached Earth
+  - Average velocity of each asteroid
+  - Top 10 fastest asteroids
+  - Hazardous asteroids with frequent approaches
+  - Closest approaches, fastest speeds, and more
+- **Extra sample queries** included for deeper insights:
+  - Average miss distance for hazardous asteroids
+  - All approaches in a specific year
+  - Asteroids with smallest/large diameters
+  - Distribution of approaches per year
+  - Earliest/latest approach dates
+  - ...and more!
+
+### 3. **Custom SQL Query Box**
+- **Write and execute your own SQL queries** directly in the dashboard to explore the data and derive your own insights.
+
+### 4. **Debugging Data Stats**
+- Optionally display sample data and statistics for debugging or exploration.
 
 ---
 
-## 🚦 How It Works
+## 🚦 How To Use the Streamlit Dashboard
 
-1. **Data Extraction**  
+1. **Install dependencies**  
+   Make sure you have Python 3 and install requirements:
+   ```sh
+   pip install streamlit pandas requests
+   ```
+
+2. **Data Extraction**  
    Run `api_requests.py` to fetch and save NEO data from NASA API to `nasa.json`.
 
-2. **Data Cleaning**  
+3. **Data Cleaning**  
    Run `data_cleance.py` to clean `nasa.json` and export the results to `neo_cleaned.json`.
 
-3. **Database Population**  
+4. **Database Population**  
    Run your database script (e.g., `sqlite3.py` or similar) to create and populate `nasa_asteroids.db` from the cleaned JSON.
 
-4. **Dashboard**  
-   Run `nasa_streamlit.py` with Streamlit to launch the interactive dashboard:
+5. **Launch the Dashboard**  
+   Run the Streamlit app:
    ```sh
    streamlit run nasa_streamlit.py
    ```
 
+6. **Explore the Features**
+   - Use the **sidebar** to switch between "Filter Criteria" and "Asteroid Queries".
+   - In **Filter Criteria**, set your filters and click "Filter" to see matching asteroids.
+   - In **Asteroid Queries**, select a predefined question to view results instantly.
+   - Try the **custom SQL query** box to write your own queries and analyze the data further.
+
 ---
+
+## 💡 Example Use Cases
+
+- Identify potentially hazardous asteroids that have approached Earth multiple times.
+- Find the fastest or largest asteroids in the dataset.
+- Analyze trends in asteroid approaches over time.
+- Explore the data with your own custom SQL queries for unique insights.
+
+---
+
+## 📚 Learning Outcomes
+
+- Practice data extraction, cleaning, and storage using real-world NASA data.
+- Learn to build interactive dashboards with Streamlit.
+- Develop SQL skills by exploring and analyzing a real asteroid dataset.
+- Gain experience in data-driven storytelling and scientific inquiry.
+
+---
+
+## 🛰️ Credits
+
+- Data: [NASA NEO API](https://api.nasa.gov/)
+- Dashboard: Built with Streamlit
 
