@@ -81,14 +81,20 @@ st.markdown(
 
 # --- Sidebar  ---
 st.sidebar.markdown('<div class="sidebar-section sidebar-title">Asteroid Approaches</div>', unsafe_allow_html=True)
-approaches_btn = st.sidebar.button('Filter Criteria', key='filter', help='Filter asteroids', use_container_width=True)  
-queries_btn = st.sidebar.button('Asteroid Queries', key='queries', help='Asteroid insights', use_container_width=True)
+if st.sidebar.button('Filter Criteria', key='filter', help='Filter asteroids', use_container_width=True):
+    st.session_state.active_page = 'filter'
+if st.sidebar.button('Asteroid Queries', key='queries', help='Asteroid insights', use_container_width=True):
+    st.session_state.active_page = 'queries'
+
+# Set default page on first load
+if 'active_page' not in st.session_state:
+    st.session_state.active_page = 'filter'
 
 # --- Main Header ---
 st.markdown('<div class="main-header">🚀 NASA Asteroid Tracker <span class="header-icon">🪐</span></div>', unsafe_allow_html=True)
 
-# --- Page Routing based on Sidebar Button ---
-if approaches_btn or (not approaches_btn and not queries_btn):
+# --- Page Routing based on session state ---
+if st.session_state.active_page == 'filter':
     # Asteroid Approaches Page (default)
     # --- Filters in Main Area ---
     st.markdown(
@@ -217,7 +223,7 @@ if approaches_btn or (not approaches_btn and not queries_btn):
 
     st.divider()
 
-elif queries_btn:
+elif st.session_state.active_page == 'queries':
     # Asteroid Queries Page
     st.header("Asteroid Insights & Queries")
     queries = {
@@ -340,6 +346,76 @@ elif queries_btn:
             JOIN close_approach c ON a.id = c.neo_reference_id
             WHERE c.astronomical < 0.05
             ORDER BY c.astronomical ASC
+            ''',
+        "Find the average miss distance for hazardous asteroids":
+            '''
+            SELECT AVG(c.miss_distance_lunar) as avg_miss_distance
+            FROM asteroids a
+            JOIN close_approach c ON a.id = c.neo_reference_id
+            WHERE a.is_potentially_hazardous_asteroid = 1
+            ''',
+        "List all approaches in 2024":
+            '''
+            SELECT a.name, c.close_approach_date, c.relative_velocity_kmph, c.miss_distance_lunar
+            FROM asteroids a
+            JOIN close_approach c ON a.id = c.neo_reference_id
+            WHERE strftime('%Y', c.close_approach_date) = '2024'
+            ORDER BY c.close_approach_date
+            ''',
+        "Show the top 5 asteroids with the smallest minimum diameter":
+            '''
+            SELECT name, estimated_diameter_min_km
+            FROM asteroids
+            ORDER BY estimated_diameter_min_km ASC
+            LIMIT 5
+            ''',
+        "Count how many asteroids have an absolute magnitude less than 20":
+            '''
+            SELECT COUNT(*) as num_asteroids
+            FROM asteroids
+            WHERE absolute_magnitude_h < 20
+            ''',
+        "List all approaches where the miss distance was between 1 and 2 lunar distances":
+            '''
+            SELECT a.name, c.close_approach_date, c.miss_distance_lunar
+            FROM asteroids a
+            JOIN close_approach c ON a.id = c.neo_reference_id
+            WHERE c.miss_distance_lunar BETWEEN 1 AND 2
+            ORDER BY c.miss_distance_lunar
+            ''',
+        "Find the asteroid with the most approaches in a single year":
+            '''
+            SELECT a.name, strftime('%Y', c.close_approach_date) as year, COUNT(*) as approach_count
+            FROM asteroids a
+            JOIN close_approach c ON a.id = c.neo_reference_id
+            GROUP BY a.name, year
+            ORDER BY approach_count DESC
+            LIMIT 1
+            ''',
+        "List all asteroids that have never been classified as hazardous":
+            '''
+            SELECT name
+            FROM asteroids
+            WHERE is_potentially_hazardous_asteroid = 0
+            ''',
+        "Show the distribution of approaches per year":
+            '''
+            SELECT strftime('%Y', c.close_approach_date) as year, COUNT(*) as approach_count
+            FROM close_approach c
+            GROUP BY year
+            ORDER BY year
+            ''',
+        "Find the earliest and latest approach dates in the database":
+            '''
+            SELECT MIN(close_approach_date) as earliest, MAX(close_approach_date) as latest
+            FROM close_approach
+            ''',
+        "List all asteroids with a maximum diameter greater than 2 km":
+            '''
+            SELECT name, estimated_diameter_max_km
+            FROM asteroids
+            WHERE estimated_diameter_max_km > 2
+            ORDER BY estimated_diameter_max_km DESC
             '''
     }
     selected_query = st.selectbox("Select a Query", list(queries.keys()))
