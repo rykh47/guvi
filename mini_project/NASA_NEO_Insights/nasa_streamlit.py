@@ -3,7 +3,7 @@ import sqlite3
 import pandas as pd
 from datetime import date
 
-conn = sqlite3.connect('NASA_NEO_Insights/db/nasa_asteroids.db')
+conn = sqlite3.connect('db/nasa_asteroids.db')
 
 # --- CSS ---
 st.markdown(
@@ -131,8 +131,7 @@ if st.session_state.active_page == 'filter':
         }
         </style>
         """,
-        unsafe_allow_html=True
-    )
+        unsafe_allow_html=True)
 
     with st.container():
         # First row
@@ -140,31 +139,26 @@ if st.session_state.active_page == 'filter':
         with col1:
             st.markdown('<span class="filter-label">Estimated Diameter Min (km)</span>', unsafe_allow_html=True)
             diam_min_range = st.slider(
-                "Diameter Min (km)", 0.0, 5.0, (0.0, 5.0), step=0.001, key='diam_min_range'
-            )
+                "Diameter Min (km)", 0.0, 5.0, (0.0, 5.0), step=0.001, key='diam_min_range'           )
         with col2:
             st.markdown('<span class="filter-label">Estimated Diameter Max (km)</span>', unsafe_allow_html=True)
             diam_max_range = st.slider(
-                "Diameter Max (km)", 0.0, 11.0, (0.0, 11.0), step=0.001, key='diam_max_range'
-            )
+                "Diameter Max (km)", 0.0, 11.0, (0.0, 11.0), step=0.001, key='diam_max_range')
         with col3:
             st.markdown('<span class="filter-label">Relative velocity (kmph)</span>', unsafe_allow_html=True)
             rel_vel = st.slider(
-                "Relative velocity (kmph)", 1418, 190514, (1418, 190514), step=1, key='rel_vel'
-            )
+                "Relative velocity (kmph)", 1418, 190514, (1418, 190514), step=1, key='rel_vel')
 
         # Second row
         col4, col5, col6 = st.columns(3)
         with col4:
             st.markdown('<span class="filter-label">Astronomical Units</span>', unsafe_allow_html=True)
             au_range = st.slider(
-                "AU", 0.0, 0.5, (0.0, 0.5), step=0.001, key='au_range'
-            )
+                "AU", 0.0, 0.5, (0.0, 0.5), step=0.001, key='au_range')
         with col5:
             st.markdown('<span class="filter-label">Lunar Distance</span>', unsafe_allow_html=True)
             lunar_range = st.slider(
-                "Lunar Distance", 0.02, 194.48, (0.02, 194.48), step=0.01, key='lunar_range'
-            )
+                "Lunar Distance", 0.02, 194.48, (0.02, 194.48), step=0.01, key='lunar_range' )
         with col6:
             st.markdown('<span class="filter-label">Potentially Hazardous</span>', unsafe_allow_html=True)
             hazardous = st.selectbox("Potentially Hazardous", ["All", "Yes", "No"], key='hazardous')
